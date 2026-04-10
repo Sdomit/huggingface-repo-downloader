@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hf-repo-downloader"
+version = "0.1.0"
+description = "Windows-first desktop downloader for Hugging Face repos with guided selection, queue management, and resumable downloads."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "PyQt6>=6.0",
+  "huggingface_hub>=1.10.1",
+  "keyring>=25.7.0",
+  "platformdirs>=4.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=9.0",
+  "pytest-qt>=4.5",
+]
+
+[project.scripts]
+hf-downloader = "hf_downloader.main:main"
+
+[tool.setuptools.packages.find]
+include = ["hf_downloader*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+qt_api = "pyqt6"
