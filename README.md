@@ -42,6 +42,29 @@ Or on Windows:
 .\run_hf_downloader.bat
 ```
 
+## Windows EXE
+
+This repository builds a Windows executable automatically with GitHub Actions.
+
+To download it:
+
+1. Open the `Actions` tab on GitHub.
+2. Select the latest `Build Windows EXE` workflow run.
+3. Download the `HF-Repo-Downloader-Windows` artifact.
+4. Extract the zip and run `HF Repo Downloader.exe`.
+
+To build the executable locally on Windows:
+
+```powershell
+.\build_exe.bat
+```
+
+The local build output is written to:
+
+```text
+dist/HF Repo Downloader/HF Repo Downloader.exe
+```
+
 ## Development
 
 Run the test suite:
@@ -65,6 +88,8 @@ hf_downloader/
   ui.py
 tests/
 run_hf_downloader.bat
+build_exe.bat
+tools/build_exe.ps1
 pyproject.toml
 ```
 
