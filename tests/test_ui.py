@@ -404,3 +404,24 @@ def test_queue_area_is_larger_and_has_clear_button(qtbot, tmp_path: Path) -> Non
     sizes = window.main_splitter.sizes()
     assert len(sizes) == 2
     assert sizes[1] >= sizes[0]
+
+
+def test_repo_action_footer_stays_outside_scroll_area(qtbot, tmp_path: Path) -> None:
+    settings_store = DummySettingsStore(tmp_path)
+    settings = AppSettings(default_download_root=str(tmp_path))
+    service = HuggingFaceService(auth_resolver=AuthResolver())
+    queue_manager = QueueManager(lambda **kwargs: None, settings_store=settings_store, settings=settings)
+    window = MainWindow(service=service, queue_manager=queue_manager, settings_store=settings_store, settings=settings, logger=None)
+    qtbot.addWidget(window)
+    window.resize(1200, 760)
+    window.show()
+    qtbot.wait(50)
+
+    assert window.add_to_queue_button.parentWidget() is window.repo_footer_widget
+    assert window.repo_footer_widget.isVisible()
+    assert window.add_to_queue_button.isVisible()
+
+    parent = window.add_to_queue_button.parentWidget()
+    while parent is not None:
+        assert not isinstance(parent, QtWidgets.QScrollArea)
+        parent = parent.parentWidget()

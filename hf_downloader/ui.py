@@ -120,6 +120,10 @@ QProgressBar::chunk {
 QSplitter::handle {
     background-color: #312b29;
 }
+QWidget#repoFooter {
+    background-color: #241f1e;
+    border-top: 1px solid #5a4d46;
+}
 QLabel#searchHint, QLabel#emptyState, QLabel#mutedText {
     color: #c2b4aa;
 }
@@ -346,13 +350,23 @@ class MainWindow(QtWidgets.QMainWindow):
         return group
 
     def _build_repo_panel(self) -> QtWidgets.QWidget:
+        group = QtWidgets.QGroupBox("Repository Details")
+        outer_layout = QtWidgets.QVBoxLayout(group)
+        outer_layout.setContentsMargins(10, 18, 10, 10)
+        outer_layout.setSpacing(8)
+
         scroll = QtWidgets.QScrollArea()
         scroll.setWidgetResizable(True)
         scroll.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
         scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scroll.setSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Expanding,
+            QtWidgets.QSizePolicy.Policy.Expanding,
+        )
 
-        group = QtWidgets.QGroupBox("Repository Details")
-        layout = QtWidgets.QVBoxLayout(group)
+        body = QtWidgets.QWidget()
+        layout = QtWidgets.QVBoxLayout(body)
+        layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(8)
         layout.setSizeConstraint(QtWidgets.QLayout.SizeConstraint.SetMinimumSize)
 
@@ -485,7 +499,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.repo_tree_stack.setMinimumHeight(210)
         layout.addWidget(self.repo_tree_stack, stretch=1)
 
-        button_row = QtWidgets.QHBoxLayout()
+        scroll.setWidget(body)
+        outer_layout.addWidget(scroll, stretch=1)
+
+        self.repo_footer_widget = QtWidgets.QWidget()
+        self.repo_footer_widget.setObjectName("repoFooter")
+        button_row = QtWidgets.QHBoxLayout(self.repo_footer_widget)
+        button_row.setContentsMargins(8, 8, 8, 8)
+        button_row.setSpacing(8)
         self.expand_all_button = QtWidgets.QPushButton("Expand All")
         self.collapse_all_button = QtWidgets.QPushButton("Collapse All")
         self.select_all_button = QtWidgets.QPushButton("Select All")
@@ -500,9 +521,8 @@ class MainWindow(QtWidgets.QMainWindow):
         button_row.addWidget(self.clear_selection_button)
         button_row.addStretch(1)
         button_row.addWidget(self.add_to_queue_button)
-        layout.addLayout(button_row)
-        scroll.setWidget(group)
-        return scroll
+        outer_layout.addWidget(self.repo_footer_widget)
+        return group
 
     def _build_queue_panel(self) -> QtWidgets.QWidget:
         widget = QtWidgets.QWidget()
