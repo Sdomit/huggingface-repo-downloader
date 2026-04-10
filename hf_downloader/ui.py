@@ -529,9 +529,13 @@ class MainWindow(QtWidgets.QMainWindow):
         layout = QtWidgets.QVBoxLayout(widget)
         layout.setSpacing(8)
 
+        self.queue_group = QtWidgets.QGroupBox("Download Queue")
+        queue_layout = QtWidgets.QVBoxLayout(self.queue_group)
+        queue_layout.setSpacing(8)
+
         self.queue_summary_label = QtWidgets.QLabel("Queue is empty")
         self.queue_summary_label.setObjectName("mutedText")
-        layout.addWidget(self.queue_summary_label)
+        queue_layout.addWidget(self.queue_summary_label)
 
         self.queue_stack = QtWidgets.QStackedWidget()
         self.queue_empty_label = QtWidgets.QLabel("Add a repo selection to the queue to manage downloads here.")
@@ -552,15 +556,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.queue_table.horizontalHeader().setStretchLastSection(True)
         self.queue_stack.addWidget(self.queue_empty_label)
         self.queue_stack.addWidget(self.queue_table)
-        layout.addWidget(self.queue_stack, stretch=2)
+        queue_layout.addWidget(self.queue_stack, stretch=1)
 
         self.active_progress_bar = QtWidgets.QProgressBar()
         self.active_progress_bar.setRange(0, 1000)
         self.active_progress_bar.setValue(0)
         self.active_progress_label = QtWidgets.QLabel("No active download")
         self.active_progress_label.setObjectName("mutedText")
-        layout.addWidget(self.active_progress_bar)
-        layout.addWidget(self.active_progress_label)
+        queue_layout.addWidget(self.active_progress_bar)
+        queue_layout.addWidget(self.active_progress_label)
 
         buttons = QtWidgets.QHBoxLayout()
         self.start_button = QtWidgets.QPushButton("Start")
@@ -581,11 +585,16 @@ class MainWindow(QtWidgets.QMainWindow):
         ):
             buttons.addWidget(button)
         buttons.addStretch(1)
-        layout.addLayout(buttons)
+        queue_layout.addLayout(buttons)
+        layout.addWidget(self.queue_group, stretch=2)
+
+        self.task_group = QtWidgets.QGroupBox("Selected Queue Job")
+        task_layout = QtWidgets.QVBoxLayout(self.task_group)
+        task_layout.setSpacing(8)
 
         self.task_summary_label = QtWidgets.QLabel("No job selected")
         self.task_summary_label.setObjectName("mutedText")
-        layout.addWidget(self.task_summary_label)
+        task_layout.addWidget(self.task_summary_label)
 
         self.task_stack = QtWidgets.QStackedWidget()
         self.task_empty_label = QtWidgets.QLabel("Select a queued job to inspect per-file progress and errors.")
@@ -601,7 +610,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.task_table.horizontalHeader().setStretchLastSection(True)
         self.task_stack.addWidget(self.task_empty_label)
         self.task_stack.addWidget(self.task_table)
-        layout.addWidget(self.task_stack, stretch=1)
+        task_layout.addWidget(self.task_stack, stretch=1)
+        layout.addWidget(self.task_group, stretch=1)
 
         self.error_label = QtWidgets.QLabel("")
         self.error_label.setWordWrap(True)

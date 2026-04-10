@@ -406,6 +406,23 @@ def test_queue_area_is_larger_and_has_clear_button(qtbot, tmp_path: Path) -> Non
     assert sizes[1] >= sizes[0]
 
 
+def test_queue_and_selected_job_areas_are_boxed(qtbot, tmp_path: Path) -> None:
+    settings_store = DummySettingsStore(tmp_path)
+    settings = AppSettings(default_download_root=str(tmp_path))
+    service = HuggingFaceService(auth_resolver=AuthResolver())
+    queue_manager = QueueManager(lambda **kwargs: None, settings_store=settings_store, settings=settings)
+    window = MainWindow(service=service, queue_manager=queue_manager, settings_store=settings_store, settings=settings, logger=None)
+    qtbot.addWidget(window)
+
+    assert isinstance(window.queue_group, QtWidgets.QGroupBox)
+    assert window.queue_group.title() == "Download Queue"
+    assert window.queue_stack.parentWidget() is window.queue_group
+
+    assert isinstance(window.task_group, QtWidgets.QGroupBox)
+    assert window.task_group.title() == "Selected Queue Job"
+    assert window.task_stack.parentWidget() is window.task_group
+
+
 def test_repo_action_footer_stays_outside_scroll_area(qtbot, tmp_path: Path) -> None:
     settings_store = DummySettingsStore(tmp_path)
     settings = AppSettings(default_download_root=str(tmp_path))
