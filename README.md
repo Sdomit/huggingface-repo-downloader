@@ -1,101 +1,102 @@
+<div align="center">
+
 # HF Repo Downloader
 
-HF Repo Downloader is a Windows-first PyQt6 desktop app for browsing Hugging Face repositories and downloading only the files you actually want.
+**Desktop Hugging Face downloader for Windows — search, select, and download only what you need.**
 
-It supports models, datasets, and spaces, lets you search by name or paste a Hugging Face URL directly, and gives you a queue-based download workflow with accurate byte progress, speed, ETA, and resumable downloads.
+[![Platform: Windows](https://img.shields.io/badge/Platform-Windows-0078D6?style=flat-square&logo=windows)]()
+[![Python: 3.11+](https://img.shields.io/badge/Python-3.11%2B-blue?style=flat-square&logo=python&logoColor=white)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)]()
+
+</div>
+
+---
+
+## What It Does
+
+HF Repo Downloader is a PyQt6 desktop app for browsing Hugging Face repositories and downloading only the files you actually want — with a queue, real byte-level progress, speed and ETA, and full resume support.
+
+Supports models, datasets, and spaces. Search by name or paste a Hugging Face URL directly.
+
+---
 
 ## Highlights
 
-- Search Hugging Face repos or open them directly from pasted URLs
-- Browse full repository trees for models, datasets, and spaces
-- Select individual files, folders, or filtered file groups before download
-- Detect repo/package type such as Diffusers, checkpoint, LoRA, GGUF, and ComfyUI-related repos
-- Use guided download modes like `Minimal`, `Recommended`, and `Full`
-- See total selected size and planned download size before queueing
-- Resume interrupted downloads and skip files already available locally
-- Manage a download queue with start, pause, resume, cancel, retry, reorder, and clear actions
-- Use private or gated repositories with a Hugging Face token stored via keyring
+- Search by repo name or paste any Hugging Face URL directly
+- Browse full repository trees — models, datasets, and spaces
+- Select individual files, entire folders, or filtered file groups
+- Detect repo type: Diffusers, checkpoint, LoRA, GGUF, ComfyUI-related, and more
+- Guided download modes: **Minimal**, **Recommended**, and **Full**
+- See total selected size before queueing anything
+- Resume interrupted downloads; skip files already present locally
+- Queue management with start, pause, resume, cancel, retry, and reorder
+- Private and gated repos via a Hugging Face token stored securely in keyring
 
-## UI Features
+---
 
-- Fast search/open bar for repo IDs and Hugging Face links
-- Repository details panel with revision picker, guided modes, and file/folder search
-- Multi-select tree for nested folders and individual files
-- Queue view with per-job progress, speed, ETA, and per-file task status
-- Saved settings for default download location, worker count, retry count, and token source
+## Quick Start
 
-## Install
+**Option A — Windows EXE (no Python needed)**
+
+1. Open the **Actions** tab on GitHub
+2. Select the latest `Build Windows EXE` workflow run
+3. Download the `HF-Repo-Downloader-Windows` artifact
+4. Extract and run `HF Repo Downloader.exe`
+
+**Option B — Run from source**
 
 ```powershell
 python -m pip install -e .[dev]
-```
-
-## Run
-
-```powershell
 python -m hf_downloader
 ```
 
-Or on Windows:
-
+Or use the one-click launcher:
 ```powershell
 .\run_hf_downloader.bat
 ```
 
-## Windows EXE
-
-This repository builds a Windows executable automatically with GitHub Actions.
-
-To download it:
-
-1. Open the `Actions` tab on GitHub.
-2. Select the latest `Build Windows EXE` workflow run.
-3. Download the `HF-Repo-Downloader-Windows` artifact.
-4. Extract the zip and run `HF Repo Downloader.exe`.
-
-To build the executable locally on Windows:
-
+**Build the EXE locally:**
 ```powershell
 .\build_exe.bat
+# Output: dist/HF Repo Downloader/HF Repo Downloader.exe
 ```
 
-The local build output is written to:
+---
 
-```text
-dist/HF Repo Downloader/HF Repo Downloader.exe
+## Requirements
+
+- Python 3.11+
+- PyQt6
+- `huggingface_hub` (official client — used for all repo discovery and downloads)
+
+---
+
+## Project Structure
+
 ```
+hf_downloader/
+  auth.py            Hugging Face token management via keyring
+  hf_service.py      Repo search, metadata, and file listing
+  models.py          Data models for repos, files, queue items
+  progress.py        Byte-level download progress tracking
+  queue_manager.py   Download queue — state machine, workers
+  repo_analysis.py   Repo type detection and guided mode suggestions
+  settings.py        Saved preferences (download path, workers, retries)
+  tree_ops.py        File tree selection logic
+  ui.py              PyQt6 application
+tests/
+```
+
+---
 
 ## Development
-
-Run the test suite:
 
 ```powershell
 pytest -q
 ```
 
-## Project Structure
+---
 
-```text
-hf_downloader/
-  auth.py
-  hf_service.py
-  models.py
-  progress.py
-  queue_manager.py
-  repo_analysis.py
-  settings.py
-  tree_ops.py
-  ui.py
-tests/
-run_hf_downloader.bat
-build_exe.bat
-tools/build_exe.ps1
-pyproject.toml
-```
+## License
 
-## Notes
-
-- This project is currently optimized for Windows desktop use.
-- The app uses the official `huggingface_hub` client for repo discovery, metadata, and downloads.
-- GitHub repo description suggestion:
-  `Desktop Hugging Face downloader for Windows with search, guided file selection, resumable downloads, queue management, and accurate progress.`
+MIT
